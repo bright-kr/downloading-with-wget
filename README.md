@@ -1,66 +1,66 @@
-# Downloading Web pages and Files with Wget and Python
+# Wget 및 Python으로 Web 페이지와 파일 다운로드하기
 
-[![Bright Data Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.com/)
+[![Bright Data Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/)
 
-This guide explores wget, a robust command-line utility for retrieving files through HTTP, HTTPS, and FTP protocols, highlighting its advantages over Python's requests library.
+이 가이드는 HTTP, HTTPS, FTP 프로토콜을 통해 파일을 가져오는 강력한 커맨드라인 유틸리티인 wget을 살펴보고, Python의 requests 라이브러리 대비 장점을 강조합니다.
 
-- [Understanding Wget](#what-is-wget)
-- [Advantages of Wget Over Python's requests Package](#advantages-of-wget-over-pythons-requests-package)
-- [Executing Command-Line Instructions in Python](#executing-command-line-instructions-in-python)
-- [Practical Wget Applications with Python](#practical-wget-applications-with-python)
-  - [Retrieving a Single File](#retrieving-a-single-file)
-  - [Capturing a Web Page](#capturing-a-web-page)
-  - [Conditional File Downloads Based on Modifications](#conditional-file-downloads-based-on-modifications)
-  - [Resuming Broken Downloads](#resuming-broken-downloads)
-  - [Mirroring an Entire Website](#mirroring-an-entire-website)
-- [Benefits and Limitations of Integrating Wget with Python](#benefits-and-limitations-of-integrating-wget-with-python)
-- [Enhancing Wget with Proxy Servers](#enhancing-wget-with-proxy-servers)
-- [Summary](#summary)
+- [Wget 이해하기](#what-is-wget)
+- [Python의 requests 패키지 대비 Wget의 장점](#advantages-of-wget-over-pythons-requests-package)
+- [Python에서 커맨드라인 명령 실행하기](#executing-command-line-instructions-in-python)
+- [Python과 함께하는 Wget의 실용적 활용](#practical-wget-applications-with-python)
+  - [단일 파일 가져오기](#retrieving-a-single-file)
+  - [Web 페이지 캡처하기](#capturing-a-web-page)
+  - [수정 여부에 따른 조건부 파일 다운로드](#conditional-file-downloads-based-on-modifications)
+  - [중단된 다운로드 재개](#resuming-broken-downloads)
+  - [웹사이트 전체 미러링](#mirroring-an-entire-website)
+- [Python에 Wget을 통합할 때의 장점과 한계](#benefits-and-limitations-of-integrating-wget-with-python)
+- [プロキシ 서버로 Wget 강화하기](#enhancing-wget-with-proxy-servers)
+- [요약](#summary)
 
 ## What Is Wget?
 
-[`wget`](https://www.gnu.org/software/wget/) serves as a versatile command-line tool designed for downloading content from the internet using HTTP, HTTPS, FTP, FTPS, and various other protocols. It comes pre-installed on most Unix-based systems and is also available for Windows environments.
+[`wget`](https://www.gnu.org/software/wget/)는 HTTP, HTTPS, FTP, FTPS 및 기타 다양한 프로토콜을 사용하여 인터넷에서 콘텐츠를 다운로드하도록 설계된 다재다능한 커맨드라인 도구입니다. 대부분의 Unix 기반 시스템에 기본으로 설치되어 있으며, Windows 환경에서도 사용할 수 있습니다.
 
 ## Advantages of Wget Over Python's requests Package
 
-There are compelling reasons to incorporate `wgen` it into Python projects instead of relying on libraries like [requests](https://brightdata.com/faqs/python-requests/what-is-requests-used-for):
+[requests](https://brightdata.co.kr/faqs/python-requests/what-is-requests-used-for)와 같은 라이브러리에 의존하는 대신 Python 프로젝트에 `wgen`을 통합해야 하는 설득력 있는 이유가 있습니다:
 
-- Broader protocol support compared to requests
-- Ability to continue downloads after interruptions
-- Options to limit bandwidth consumption
-- Support for wildcard patterns in filenames and network paths
-- Multilingual messaging through NLS
-- Capability to transform absolute URLs to relative links in retrieved documents
-- Integration with HTTP/S proxies
-- Maintenance of persistent HTTP connections
-- Support for background/unattended download operations
-- Smart re-download decisions based on file timestamps during mirroring
-- Recursive downloading of linked resources to specified depth levels
-- Built-in compliance with robots.txt directives (learn more in our [robots.txt web scraping guide](https://brightdata.com/blog/how-tos/robots-txt-for-web-scraping-guide))
+- requests 대비 더 폭넓은 프로토콜 지원
+- 중단 이후에도 다운로드를 계속할 수 있는 기능
+- 帯域幅 사용량을 제한하는 옵션
+- 파일명 및 네트워크 경로에서 와일드카드 패턴 지원
+- NLS를 통한 다국어 메시징
+- 가져온 문서에서 절대 URL을 상대 링크로 변환하는 기능
+- HTTP/S プロキシ와의 통합
+- 영속적인 HTTP 연결 유지
+- 백그라운드/무인 다운로드 작업 지원
+- 미러링 시 파일 타임스탬프 기반의 스마트 재다운로드 판단
+- 지정한 깊이 수준까지 링크된 리소스를 재귀적으로 다운로드
+- robots.txt 지시문에 대한 기본 준수(자세한 내용은 [robots.txt web scraping guide](https://brightdata.co.kr/blog/how-tos/robots-txt-for-web-scraping-guide)에서 확인하십시오)
 
-These features represent just a portion of what makes `wget` exceptionally powerful compared to standard Python HTTP libraries. A particularly noteworthy feature is `wget`'s ability to navigate through HTML pages, following and downloading referenced files. This functionality makes it particularly suitable for web crawling operations.
+이러한 기능은 표준 Python HTTP 라이브러리와 비교했을 때 `wget`이 매우 강력한 이유의 일부에 불과합니다. 특히 주목할 만한 기능은 `wget`이 HTML 페이지를 탐색하면서 참조된 파일을 따라가 다운로드할 수 있다는 점입니다. 이 기능은 Web クローリング 작업에 특히 적합합니다.
 
-Let's explore implementing `wget` in Python.
+이제 Python에서 `wget`을 구현하는 방법을 살펴보겠습니다.
 
 ## Executing Command-Line Instructions in Python
 
-Follow this process to create a Python script capable of executing `wget` commands.
+`wget` 명령을 실행할 수 있는 Python 스크립트를 만들기 위해 다음 과정을 따르십시오.
 
 ### Setup Requirements
 
-Before proceeding, ensure `wget` is properly installed on your system. Installation varies by operating system:
+진행하기 전에 시스템에 `wget`이 올바르게 설치되어 있는지 확인하십시오. 설치 방법은 운영체제에 따라 다릅니다:
 
-- Linux systems typically include wget by default; if not, install through your distribution's package manager
-- Mac users can [install `wget` using Homebrew](https://formulae.brew.sh/formula/wget)
-- Windows users should download the [`Wget` Windows binary](https://gnuwin32.sourceforge.net/packages/wget.htm), place it in a directory, then add this location (e.g., C:\\Program Files (x86)\\Wget) to your [system PATH variable](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/)
+- Linux 시스템은 일반적으로 기본으로 wget을 포함합니다. 포함되어 있지 않다면 배포판의 패키지 매니저를 통해 설치하십시오.
+- Mac 사용자는 [Homebrew로 `wget`을 설치](https://formulae.brew.sh/formula/wget)할 수 있습니다.
+- Windows 사용자는 [`Wget` Windows 바이너리](https://gnuwin32.sourceforge.net/packages/wget.htm)를 다운로드하여 디렉터리에 배치한 다음, 해당 위치(예: C:\\Program Files (x86)\\Wget)를 [system PATH variable](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/)에 추가해야 합니다.
 
-You'll also need Python 3+ installed. Obtain it by [downloading the installer](https://www.python.org/downloads/) and completing the installation process.
+또한 Python 3+가 설치되어 있어야 합니다. [인스톨러를 다운로드](https://www.python.org/downloads/)하여 설치 과정을 완료하십시오.
 
-A development environment such as [PyCharm Community Edition](https://www.jetbrains.com/pycharm/download/) or [Visual Studio Code with Python extensions](https://code.visualstudio.com/docs/languages/python) will enhance your coding experience.
+[PyCharm Community Edition](https://www.jetbrains.com/pycharm/download/) 또는 [Python extensions가 포함된 Visual Studio Code](https://code.visualstudio.com/docs/languages/python)와 같은 개발 환경을 사용하면 코딩 경험이 향상됩니다.
 
 ### Creating Your Python Environment
 
-Establish a new Python project with a dedicated [virtual environment](https://docs.python.org/3/library/venv.html):
+전용 [virtual environment](https://docs.python.org/3/library/venv.html)와 함께 새 Python 프로젝트를 설정하십시오:
 
 ```sh
 mkdir wget-python-demo
@@ -70,35 +70,35 @@ cd wget-python-demo
 python -m venv env
 ```
 
-The `wget-python-demo` folder will serve as your project directory.
+`wget-python-demo` 폴더가 프로젝트 디렉터리로 사용됩니다.
 
-Open this location in your IDE, create a `script.py` file with this initial content:
+이 위치를 IDE에서 열고 `script.py` 파일을 생성한 뒤 다음 초기 내용을 추가하십시오:
 
 ```python
 print('Hello, World!')
 ```
 
-This simple script currently outputs "Hello, World!" to the console, but we'll soon expand it with `wget` functionality.
+이 간단한 스크립트는 현재 콘솔에 "Hello, World!"를 출력하지만, 곧 `wget` 기능으로 확장할 것입니다.
 
-Test your script by clicking the run button in your IDE or by entering:
+IDE의 실행 버튼을 클릭하거나 다음을 입력하여 스크립트를 테스트하십시오:
 
 ```sh
 python script.py
 ```
 
-You should see this output:
+다음 출력이 표시되어야 합니다:
 
 ```
 Hello, World!
 ```
 
-Now let's implement `wget` integration.
+이제 `wget` 통합을 구현해 보겠습니다.
 
-**Creating a Function for CLI Command Execution**
+**CLI 명령 실행을 위한 함수 생성**
 
-The most straightforward approach to running terminal commands from Python involves the [`subprocess`](https://docs.python.org/3/library/subprocess.html) module. This standard library component allows you to launch new processes, connect to their input/output/error streams, and retrieve their exit codes—providing everything needed to execute terminal commands from within Python.
+Python에서 터미널 명령을 실행하는 가장 간단한 방법은 [`subprocess`](https://docs.python.org/3/library/subprocess.html) 모듈을 사용하는 것입니다. 이 표준 라이브러리 구성 요소는 새 프로세스를 실행하고, 해당 프로세스의 입력/출력/에러 스트림에 연결하며, 종료 코드를 가져올 수 있게 해 줍니다. 즉, Python 내부에서 터미널 명령을 실행하는 데 필요한 모든 기능을 제공합니다.
 
-Here's how to leverage the [`Popen()`](https://docs.python.org/3/library/subprocess.html#subprocess.Popen) method from subprocess to run `wget` commands in Python:
+다음은 subprocess의 [`Popen()`](https://docs.python.org/3/library/subprocess.html#subprocess.Popen) 메서드를 활용하여 Python에서 `wget` 명령을 실행하는 방법입니다:
 
 ```python
 import subprocess
@@ -129,9 +129,9 @@ def execute_command(command):
         return None, str(e)
 ```
 
-`Popen()` launches your specified command as a new process in your operating system. The `shell=True` parameter ensures the method utilizes your system's default shell environment.
+`Popen()`은 지정한 명령을 운영체제에서 새 프로세스로 실행합니다. `shell=True` 파라미터는 메서드가 시스템의 기본 shell 환경을 사용하도록 보장합니다.
 
-Add this function to your script.py file. You can now execute any command-line instruction in Python like this:
+이 함수를 script.py 파일에 추가하십시오. 이제 다음과 같이 Python에서 어떤 커맨드라인 명령이든 실행할 수 있습니다:
 
 ```python
 output, error = execute_command("<CLI command string>")
@@ -144,37 +144,37 @@ else:
 
 ## Practical Wget Applications with Python
 
-The standard `wget` command structure is:
+표준 `wget` 명령 구조는 다음과 같습니다:
 
 ```sh
 wget [options] [url]
 ```
 
-Where:
-- `[options]` represents various flags and parameters that modify `wget`'s behavior
-- `[url]` specifies the location of the content you want to download, which can be a direct file link or a webpage containing multiple resources
+여기서:
+- `[options]`는 `wget`의 동작을 수정하는 다양한 플래그와 파라미터를 의미합니다
+- `[url]`은 다운로드하려는 콘텐츠의 위치를 지정하며, 직접 파일 링크이거나 여러 리소스를 포함한 웹페이지일 수 있습니다
 
 > **Note**:
 >
-> Windows users should use `wget.exe` instead of `wget`.
+> Windows 사용자는 `wget` 대신 `wget.exe`를 사용해야 합니다.
 
-Let's explore several practical scenarios using `wget` through Python.
+Python을 통해 `wget`을 사용하는 몇 가지 실용적인 시나리오를 살펴보겠습니다.
 
 ### Retrieving a Single File
 
-To download http://lumtest.com/myip.json using `wget`, the basic command would be:
+`wget`으로 http://lumtest.com/myip.json 을 다운로드하려면 기본 명령은 다음과 같습니다:
 
 ```sh
 wget http://lumtest.com/myip.json
 ```
 
-In Python, this becomes:
+Python에서는 다음과 같습니다:
 
 ```python
 output, error = execute_command("wget http://lumtest.com/myip.json")
 ```
 
-Printing the output would display something like:
+출력을 출력하면 다음과 유사한 내용이 표시됩니다:
 
 ```
 --2024-04-18 15:20:59-- http://lumtest.com/myip.json
@@ -189,75 +189,75 @@ myip.json.1 100%[=================================================>] 266 --.-KB/
 2024-04-18 15:20:59 (5.41 MB/s) - 'myip.json.1' saved [266/266]
 ```
 
-This output reveals that:
-1. The URL resolves to the server's IP address
-2. A connection is established with an HTTP request to the specified resource
-3. The server responds with a [200 OK status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
-4. The file downloads and saves to your current directory
+이 출력은 다음을 보여줍니다:
+1. URL이 서버의 IPアドレス로 해석됩니다
+2. 지정된 리소스에 대해 HTTP リクエスト로 연결이 설정됩니다
+3. 서버가 [200 OK status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)로 응답합니다
+4. 파일이 다운로드되어 현재 디렉터리에 저장됩니다
 
-Your project folder will now contain the downloaded myip.json file.
+이제 프로젝트 폴더에 다운로드된 myip.json 파일이 포함됩니다.
 
-To specify a different destination folder, use the `--directory-prefix` or `-P` flag:
+다른 대상 폴더를 지정하려면 `--directory-prefix` 또는 `-P` 플래그를 사용하십시오:
 
 ```python
 output, error = execute_command("wget --directory-prefix=./download http://lumtest.com/myip.json")
 ```
 
-This saves the file to a "download" subfolder within your project directory. If this folder doesn't exist, `wget` automatically creates it.
+이렇게 하면 파일이 프로젝트 디렉터리 내 "download" 하위 폴더에 저장됩니다. 이 폴더가 존재하지 않으면 `wget`이 자동으로 생성합니다.
 
-To rename the downloaded file, use the `--output-document` or `-O` flag:
+다운로드된 파일의 이름을 바꾸려면 `--output-document` 또는 `-O` 플래그를 사용하십시오:
 
 ```python
 output, error = execute_command("wget --output-document=custom-name.json http://lumtest.com/myip.json")
 ```
 
-This creates a file named custom-name.json instead of using the original filename.
+이렇게 하면 원래 파일명을 사용하는 대신 custom-name.json이라는 파일이 생성됩니다.
 
 ### Capturing a Web Page
 
-The command structure remains identical, but the URL points to a webpage instead:
+명령 구조는 동일하지만, URL이 대신 웹페이지를 가리킵니다:
 
 ```python
-output, error = execute_command("wget https://brightdata.com/")
+output, error = execute_command("wget https://brightdata.co.kr/")
 ```
 
-This downloads an index.html file containing the HTML content from the brightdata.com homepage.
+이는 brightdata.com 홈페이지의 HTML 콘텐츠를 포함하는 index.html 파일을 다운로드합니다.
 
 ### Conditional File Downloads Based on Modifications
 
-To conserve bandwidth and storage, you might prefer downloading files only when they've changed since your last download. `wget` provides [file timestamping capabilities](https://www.gnu.org/software/wget/manual/html_node/Time_002dStamping.html) for this purpose.
+帯域幅와 저장 공간을 절약하기 위해, 마지막 다운로드 이후 변경된 경우에만 파일을 다운로드하고 싶을 수 있습니다. `wget`은 이를 위해 [file timestamping capabilities](https://www.gnu.org/software/wget/manual/html_node/Time_002dStamping.html)를 제공합니다.
 
-The `--timestamping` option instructs `wget` to compare timestamps between local and server files. If your local file has an identical or newer timestamp than the server version, `wget` skips the download.
+`--timestamping` 옵션은 `wget`이 로컬 파일과 서버 파일 간의 타임스탬프를 비교하도록 지시합니다. 로컬 파일의 타임스탬프가 서버 버전과 동일하거나 더 최신이면 `wget`은 다운로드를 건너뜁니다.
 
-The timestamping process works as follows:
+타임스탬핑 프로세스는 다음과 같이 작동합니다:
 
-1. When using the `--timestamping` or `-N` option, `wget` retrieves the remote file's timestamp
-2. It compares this with the local file's timestamp (if present)
-3. Downloads occur only when the local file is missing or has an older timestamp than the server version
+1. `--timestamping` 또는 `-N` 옵션을 사용하면 `wget`이 원격 파일의 타임스탬프를 가져옵니다
+2. 이를 로컬 파일의 타임스탬프(존재하는 경우)와 비교합니다
+3. 로컬 파일이 없거나 서버 버전보다 오래된 타임스탬프를 가진 경우에만 다운로드가 발생합니다
 
-For HTTP resources, timestamping checks the [Last-Modified](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified) header returned after a HEAD request. `wget` also examines the [Content-Length](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length) header to compare file sizes—if these differ, the file downloads regardless of timestamp information. Note that Last-Modified is optional; without it, `wget` downloads the file automatically.
+HTTP 리소스의 경우 타임스탬핑은 HEAD リクエスト 이후 반환되는 [Last-Modified](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified) 헤ッダー를 확인합니다. `wget`은 또한 [Content-Length](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length) 헤ッダー를 검사하여 파일 크기를 비교하는데, 이 값이 다르면 타임스탬프 정보와 관계없이 파일을 다운로드합니다. Last-Modified는 선택 사항이며, 이것이 없으면 `wget`은 자동으로 파일을 다운로드합니다.
 
-Implement timestamping in Python like this:
+Python에서 타임스탬핑을 구현하는 방법은 다음과 같습니다:
 
 ```python
-output, error = execute_command("wget --timestamping https://brightdata.com")
+output, error = execute_command("wget --timestamping https://brightdata.co.kr")
 ```
 
-If you've previously downloaded index.html, you'll see a message like:
+이전에 index.html을 다운로드한 적이 있다면 다음과 같은 메시지가 표시됩니다:
 
 ```
---2024-04-18 15:55:06-- https://brightdata.com
+--2024-04-18 15:55:06-- https://brightdata.co.kr
 Resolving brightdata.com (brightdata.com)... 104.18.25.60, 104.18.24.60
 Connecting to brightdata.com (brightdata.com)|104.18.25.60|:443... connected.
 HTTP request sent, awaiting response... 304 Not Modified
 File 'index.html' not modified on server. Omitting download.
 ```
 
-This same mechanism works with [FTP downloads](https://www.gnu.org/software/wget/manual/html_node/FTP-Time_002dStamping-Internals.html) as well.
+이 동일한 메커니즘은 [FTP downloads](https://www.gnu.org/software/wget/manual/html_node/FTP-Time_002dStamping-Internals.html)에서도 작동합니다.
 
 ### Resuming Broken Downloads
 
-By default, `wget` automatically attempts up to 20 retries if a connection fails during download. To manually resume a partially completed download, use the `--continue` or `-c` option:
+기본적으로 `wget`은 다운로드 중 연결 실패가 발생하면 최대 20회까지 자동 リトライ를 시도합니다. 부분적으로 완료된 다운로드를 수동으로 재개하려면 `--continue` 또는 `-c` 옵션을 사용하십시오:
 
 ```python
 output, error = execute_command("wget --continue http://lumtest.com/myip.json")
@@ -265,52 +265,52 @@ output, error = execute_command("wget --continue http://lumtest.com/myip.json")
 
 ### Mirroring an Entire Website
 
-One of `wget`'s most powerful features is recursive downloading, enabling you to capture an entire website with a single command.
+`wget`의 가장 강력한 기능 중 하나는 재귀 다운로드로, 단일 명령으로 웹사이트 전체를 캡처할 수 있게 해줍니다.
 
-Starting from your specified URL, `wget` parses the HTML and follows links found in `src` and `href` attributes or CSS `url()` values. When these referenced files are HTML/text documents, `wget` continues parsing and following their links until reaching your desired depth limit. This recursive process follows a [breadth-first search pattern](https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/), downloading depth 1 resources before proceeding to depth 2, and so on.
+지정한 URL에서 시작하여 `wget`은 HTML을 파싱하고 `src` 및 `href` 속성이나 CSS `url()` 값에서 발견되는 링크를 따라갑니다. 이러한 참조 파일이 HTML/텍스트 문서인 경우, 원하는 깊이 제한에 도달할 때까지 `wget`은 계속해서 파싱하고 링크를 따라갑니다. 이 재귀 프로세스는 [breadth-first search pattern](https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/)을 따르며, 깊이 1 리소스를 다운로드한 뒤 깊이 2로 진행하는 방식으로 계속됩니다.
 
-Key options for recursive downloading include:
+재귀 다운로드를 위한 주요 옵션은 다음과 같습니다:
 
-- `--recursive` or `-r`: Enables recursive downloading of linked resources including images, stylesheets, scripts, etc. Files are organized in a folder named after the target domain.
-- `--level=<depth>` or `-l=<depth>`: Defines the maximum recursion depth for following links. For example, `--level=1` only downloads pages directly linked from your starting URL. The default limit is 5 to prevent excessive crawling. Use 0 or 'inf' for unlimited depth. To ensure all display-critical resources are downloaded regardless of depth, add the `-p` or `--page-requisites` option.
-- `--convert-links` or `-k`: Adjusts links within downloaded HTML files to reference your local copies instead of original URLs. This enables offline browsing of the downloaded content.
+- `--recursive` 또는 `-r`: 이미지, 스타일시트, 스크립트 등 링크된 리소스의 재귀 다운로드를 활성화합니다. 파일은 대상 도메인 이름의 폴더로 구성됩니다.
+- `--level=<depth>` 또는 `-l=<depth>`: 링크를 따라가는 최대 재귀 깊이를 정의합니다. 예를 들어 `--level=1`은 시작 URL에서 직접 링크된 페이지만 다운로드합니다. 기본 제한은 과도한 クローリング을 방지하기 위해 5입니다. 무제한 깊이를 원하면 0 또는 'inf'를 사용하십시오. 깊이와 관계없이 표시에 중요한 모든 리소스가 다운로드되도록 하려면 `-p` 또는 `--page-requisites` 옵션을 추가하십시오.
+- `--convert-links` 또는 `-k`: 다운로드된 HTML 파일 내 링크를 원래 URL 대신 로컬 복사본을 참조하도록 조정합니다. 이를 통해 다운로드한 콘텐츠를 오프라인으로 탐색할 수 있습니다.
 
-To recursively download the Bright Data website with a depth limit of 1 and convert all links to local references:
+Bright Data 웹사이트를 깊이 제한 1로 재귀 다운로드하고 모든 링크를 로컬 참조로 변환하려면 다음과 같이 하십시오:
 
 ```python
-output, error = execute_command("wget --recursive --level=1 --convert-links https://brightdata.com")
+output, error = execute_command("wget --recursive --level=1 --convert-links https://brightdata.co.kr")
 ```
 
-After completion, you'll have a brightdata.com folder containing a local copy of the site with one level of recursive depth.
+완료 후 brightdata.com 폴더가 생성되며, 재귀 깊이 1 수준의 로컬 사이트 사본을 포함하게 됩니다.
 
 ## Benefits and Limitations of Integrating Wget with Python
 
-Let's consider the advantages and disadvantages of using `wget` with Python.
+Python에서 `wget`을 사용하는 것의 장점과 단점을 살펴보겠습니다.
 
 **Benefits**
 
-- Simple Python integration through the subprocess module
-- Extensive feature set including recursive downloading, automatic retries, timestamping, and more
-- Ability to mirror entire websites with a single command
-- Built-in FTP support
-- Proxy server integration
-- Capability to resume interrupted downloads
+- subprocess 모듈을 통한 간단한 Python 통합
+- 재귀 다운로드, 자동 リトライ, 타임스탬핑 등 광범위한 기능 세트
+- 단일 명령으로 전체 웹사이트를 미러링할 수 있는 기능
+- 내장 FTP 지원
+- プロキシ 서버 통합
+- 중단된 다운로드를 재개할 수 있는 기능
 
 **Limitations**
 
-- Output consists of downloaded files rather than direct string variables usable within Python code
-- Requires additional parsers like [Beautiful Soup](https://brightdata.com/how-tos/beautiful-soup-web-scraping) to extract specific elements from downloaded HTML
+- 출력이 Python 코드에서 바로 사용할 수 있는 문자열 변수가 아니라 다운로드된 파일로 구성됩니다
+- 다운로드된 HTML에서 특정 요소를 추출하려면 [Beautiful Soup](https://brightdata.co.kr/how-tos/beautiful-soup-web-scraping) 같은 추가 파서가 필요합니다
 
 ## Enhancing Wget with Proxy Servers
 
-A common challenge when using `wget` for downloads is potential request blocking. This occurs because `wget` requests are typically identified as automated traffic. To protect against such automated access, many websites implement various restrictions including geographic blocks, rate limits, and anti-scraping measures.
+`wget`을 사용해 다운로드할 때 흔히 겪는 과제는 リクエスト가 차단될 가능성입니다. 이는 `wget` リクエスト가 일반적으로 자동화된 트래픽으로 식별되기 때문입니다. 이러한 자동화 접근을 방지하기 위해 많은 웹사이트는 지리적 차단, レート制限, アンチスクレイピング 조치 등 다양한 제한을 구현합니다.
 
-Incorporating a proxy server with `wget` offers an effective solution for bypassing these limitations. A proxy functions as an intermediary between your system and the internet, routing your traffic through alternative IP addresses. This helps conceal your actual IP and circumvent many website restrictions.
+`wget`에 プロキシ 서버를 통합하면 이러한 제한을 우회하는 효과적인 해결책이 됩니다. プロキシ는 시스템과 인터넷 사이의 중개자 역할을 하며, 대체 IPアドレス를 통해 트래픽을 라우팅합니다. 이를 통해 실제 IP를 숨기고 많은 웹사이트 제한을 우회하는 데 도움이 됩니다.
 
-For detailed instructions, see our guide on [how to use a proxy with `Wget`](https://brightdata.com/blog/how-tos/wget-proxy).
+자세한 지침은 [how to use a proxy with `Wget`](https://brightdata.co.kr/blog/how-tos/wget-proxy) 가이드를 참고하십시오.
 
 ## Summary
 
-While `wget` has advantages over the Python `requests` library, you still need proxy services to overcome anti-bot measures that websites employ.
+`wget`은 Python `requests` 라이브러리보다 장점이 있지만, 웹사이트가 사용하는 アンチボット 조치를 극복하려면 여전히 プロキシ 서비스가 필요합니다.
 
-For premium proxy services trusted by Fortune 500 companies and over 20,000 customers worldwide, consider Bright Data and their extensive range of [proxy services](https://brightdata.com/proxy-types).
+Fortune 500 기업과 전 세계 20,000명 이상의 고객이 신뢰하는 프리미엄 プロキシ 서비스를 원하신다면, Bright Data와 그들의 광범위한 [proxy services](https://brightdata.co.kr/proxy-types)를 고려해 보십시오.
