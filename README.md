@@ -1,6 +1,6 @@
 # Wget 및 Python으로 Web 페이지와 파일 다운로드하기
 
-[![Bright Data Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/)
+[![Bright Data Promo](https://github.com/bright-kr/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/)
 
 이 가이드는 HTTP, HTTPS, FTP 프로토콜을 통해 파일을 가져오는 강력한 커맨드라인 유틸리티인 wget을 살펴보고, Python의 requests 라이브러리 대비 장점을 강조합니다.
 
