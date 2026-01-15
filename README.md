@@ -14,7 +14,7 @@
   - [중단된 다운로드 재개](#resuming-broken-downloads)
   - [웹사이트 전체 미러링](#mirroring-an-entire-website)
 - [Python에 Wget을 통합할 때의 장점과 한계](#benefits-and-limitations-of-integrating-wget-with-python)
-- [プロキシ 서버로 Wget 강화하기](#enhancing-wget-with-proxy-servers)
+- [프록시 서버로 Wget 강화하기](#enhancing-wget-with-proxy-servers)
 - [요약](#summary)
 
 ## What Is Wget?
@@ -27,18 +27,18 @@
 
 - requests 대비 더 폭넓은 프로토콜 지원
 - 중단 이후에도 다운로드를 계속할 수 있는 기능
-- 帯域幅 사용량을 제한하는 옵션
+- 대역폭 사용량을 제한하는 옵션
 - 파일명 및 네트워크 경로에서 와일드카드 패턴 지원
 - NLS를 통한 다국어 메시징
 - 가져온 문서에서 절대 URL을 상대 링크로 변환하는 기능
-- HTTP/S プロキシ와의 통합
+- HTTP/S 프록시와의 통합
 - 영속적인 HTTP 연결 유지
 - 백그라운드/무인 다운로드 작업 지원
 - 미러링 시 파일 타임스탬프 기반의 스마트 재다운로드 판단
 - 지정한 깊이 수준까지 링크된 리소스를 재귀적으로 다운로드
 - robots.txt 지시문에 대한 기본 준수(자세한 내용은 [robots.txt web scraping guide](https://brightdata.co.kr/blog/how-tos/robots-txt-for-web-scraping-guide)에서 확인하십시오)
 
-이러한 기능은 표준 Python HTTP 라이브러리와 비교했을 때 `wget`이 매우 강력한 이유의 일부에 불과합니다. 특히 주목할 만한 기능은 `wget`이 HTML 페이지를 탐색하면서 참조된 파일을 따라가 다운로드할 수 있다는 점입니다. 이 기능은 Web クローリング 작업에 특히 적합합니다.
+이러한 기능은 표준 Python HTTP 라이브러리와 비교했을 때 `wget`이 매우 강력한 이유의 일부에 불과합니다. 특히 주목할 만한 기능은 `wget`이 HTML 페이지를 탐색하면서 참조된 파일을 따라가 다운로드할 수 있다는 점입니다. 이 기능은 Web 크롤링 작업에 특히 적합합니다.
 
 이제 Python에서 `wget`을 구현하는 방법을 살펴보겠습니다.
 
@@ -190,8 +190,8 @@ myip.json.1 100%[=================================================>] 266 --.-KB/
 ```
 
 이 출력은 다음을 보여줍니다:
-1. URL이 서버의 IPアドレス로 해석됩니다
-2. 지정된 리소스에 대해 HTTP リクエスト로 연결이 설정됩니다
+1. URL이 서버의 IP 주소로 해석됩니다
+2. 지정된 리소스에 대해 HTTP 요청로 연결이 설정됩니다
 3. 서버가 [200 OK status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)로 응답합니다
 4. 파일이 다운로드되어 현재 디렉터리에 저장됩니다
 
@@ -225,7 +225,7 @@ output, error = execute_command("wget https://brightdata.co.kr/")
 
 ### Conditional File Downloads Based on Modifications
 
-帯域幅와 저장 공간을 절약하기 위해, 마지막 다운로드 이후 변경된 경우에만 파일을 다운로드하고 싶을 수 있습니다. `wget`은 이를 위해 [file timestamping capabilities](https://www.gnu.org/software/wget/manual/html_node/Time_002dStamping.html)를 제공합니다.
+대역폭와 저장 공간을 절약하기 위해, 마지막 다운로드 이후 변경된 경우에만 파일을 다운로드하고 싶을 수 있습니다. `wget`은 이를 위해 [file timestamping capabilities](https://www.gnu.org/software/wget/manual/html_node/Time_002dStamping.html)를 제공합니다.
 
 `--timestamping` 옵션은 `wget`이 로컬 파일과 서버 파일 간의 타임스탬프를 비교하도록 지시합니다. 로컬 파일의 타임스탬프가 서버 버전과 동일하거나 더 최신이면 `wget`은 다운로드를 건너뜁니다.
 
@@ -235,7 +235,7 @@ output, error = execute_command("wget https://brightdata.co.kr/")
 2. 이를 로컬 파일의 타임스탬프(존재하는 경우)와 비교합니다
 3. 로컬 파일이 없거나 서버 버전보다 오래된 타임스탬프를 가진 경우에만 다운로드가 발생합니다
 
-HTTP 리소스의 경우 타임스탬핑은 HEAD リクエスト 이후 반환되는 [Last-Modified](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified) 헤ッダー를 확인합니다. `wget`은 또한 [Content-Length](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length) 헤ッダー를 검사하여 파일 크기를 비교하는데, 이 값이 다르면 타임스탬프 정보와 관계없이 파일을 다운로드합니다. Last-Modified는 선택 사항이며, 이것이 없으면 `wget`은 자동으로 파일을 다운로드합니다.
+HTTP 리소스의 경우 타임스탬핑은 HEAD 요청 이후 반환되는 [Last-Modified](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified) 헤ッダー를 확인합니다. `wget`은 또한 [Content-Length](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Length) 헤ッダー를 검사하여 파일 크기를 비교하는데, 이 값이 다르면 타임스탬프 정보와 관계없이 파일을 다운로드합니다. Last-Modified는 선택 사항이며, 이것이 없으면 `wget`은 자동으로 파일을 다운로드합니다.
 
 Python에서 타임스탬핑을 구현하는 방법은 다음과 같습니다:
 
@@ -257,7 +257,7 @@ File 'index.html' not modified on server. Omitting download.
 
 ### Resuming Broken Downloads
 
-기본적으로 `wget`은 다운로드 중 연결 실패가 발생하면 최대 20회까지 자동 リトライ를 시도합니다. 부분적으로 완료된 다운로드를 수동으로 재개하려면 `--continue` 또는 `-c` 옵션을 사용하십시오:
+기본적으로 `wget`은 다운로드 중 연결 실패가 발생하면 최대 20회까지 자동 재시도를 시도합니다. 부분적으로 완료된 다운로드를 수동으로 재개하려면 `--continue` 또는 `-c` 옵션을 사용하십시오:
 
 ```python
 output, error = execute_command("wget --continue http://lumtest.com/myip.json")
@@ -272,7 +272,7 @@ output, error = execute_command("wget --continue http://lumtest.com/myip.json")
 재귀 다운로드를 위한 주요 옵션은 다음과 같습니다:
 
 - `--recursive` 또는 `-r`: 이미지, 스타일시트, 스크립트 등 링크된 리소스의 재귀 다운로드를 활성화합니다. 파일은 대상 도메인 이름의 폴더로 구성됩니다.
-- `--level=<depth>` 또는 `-l=<depth>`: 링크를 따라가는 최대 재귀 깊이를 정의합니다. 예를 들어 `--level=1`은 시작 URL에서 직접 링크된 페이지만 다운로드합니다. 기본 제한은 과도한 クローリング을 방지하기 위해 5입니다. 무제한 깊이를 원하면 0 또는 'inf'를 사용하십시오. 깊이와 관계없이 표시에 중요한 모든 리소스가 다운로드되도록 하려면 `-p` 또는 `--page-requisites` 옵션을 추가하십시오.
+- `--level=<depth>` 또는 `-l=<depth>`: 링크를 따라가는 최대 재귀 깊이를 정의합니다. 예를 들어 `--level=1`은 시작 URL에서 직접 링크된 페이지만 다운로드합니다. 기본 제한은 과도한 크롤링을 방지하기 위해 5입니다. 무제한 깊이를 원하면 0 또는 'inf'를 사용하십시오. 깊이와 관계없이 표시에 중요한 모든 리소스가 다운로드되도록 하려면 `-p` 또는 `--page-requisites` 옵션을 추가하십시오.
 - `--convert-links` 또는 `-k`: 다운로드된 HTML 파일 내 링크를 원래 URL 대신 로컬 복사본을 참조하도록 조정합니다. 이를 통해 다운로드한 콘텐츠를 오프라인으로 탐색할 수 있습니다.
 
 Bright Data 웹사이트를 깊이 제한 1로 재귀 다운로드하고 모든 링크를 로컬 참조로 변환하려면 다음과 같이 하십시오:
@@ -290,10 +290,10 @@ Python에서 `wget`을 사용하는 것의 장점과 단점을 살펴보겠습�
 **Benefits**
 
 - subprocess 모듈을 통한 간단한 Python 통합
-- 재귀 다운로드, 자동 リトライ, 타임스탬핑 등 광범위한 기능 세트
+- 재귀 다운로드, 자동 재시도, 타임스탬핑 등 광범위한 기능 세트
 - 단일 명령으로 전체 웹사이트를 미러링할 수 있는 기능
 - 내장 FTP 지원
-- プロキシ 서버 통합
+- 프록시 서버 통합
 - 중단된 다운로드를 재개할 수 있는 기능
 
 **Limitations**
@@ -303,14 +303,14 @@ Python에서 `wget`을 사용하는 것의 장점과 단점을 살펴보겠습�
 
 ## Enhancing Wget with Proxy Servers
 
-`wget`을 사용해 다운로드할 때 흔히 겪는 과제는 リクエスト가 차단될 가능성입니다. 이는 `wget` リクエスト가 일반적으로 자동화된 트래픽으로 식별되기 때문입니다. 이러한 자동화 접근을 방지하기 위해 많은 웹사이트는 지리적 차단, レート制限, アンチスクレイピング 조치 등 다양한 제한을 구현합니다.
+`wget`을 사용해 다운로드할 때 흔히 겪는 과제는 요청가 차단될 가능성입니다. 이는 `wget` 요청가 일반적으로 자동화된 트래픽으로 식별되기 때문입니다. 이러한 자동화 접근을 방지하기 위해 많은 웹사이트는 지리적 차단, 속도 제한, アンチ스크레이핑 조치 등 다양한 제한을 구현합니다.
 
-`wget`에 プロキシ 서버를 통합하면 이러한 제한을 우회하는 효과적인 해결책이 됩니다. プロキシ는 시스템과 인터넷 사이의 중개자 역할을 하며, 대체 IPアドレス를 통해 트래픽을 라우팅합니다. 이를 통해 실제 IP를 숨기고 많은 웹사이트 제한을 우회하는 데 도움이 됩니다.
+`wget`에 프록시 서버를 통합하면 이러한 제한을 우회하는 효과적인 해결책이 됩니다. 프록시는 시스템과 인터넷 사이의 중개자 역할을 하며, 대체 IP 주소를 통해 트래픽을 라우팅합니다. 이를 통해 실제 IP를 숨기고 많은 웹사이트 제한을 우회하는 데 도움이 됩니다.
 
 자세한 지침은 [how to use a proxy with `Wget`](https://brightdata.co.kr/blog/how-tos/wget-proxy) 가이드를 참고하십시오.
 
 ## Summary
 
-`wget`은 Python `requests` 라이브러리보다 장점이 있지만, 웹사이트가 사용하는 アンチボット 조치를 극복하려면 여전히 プロキシ 서비스가 필요합니다.
+`wget`은 Python `requests` 라이브러리보다 장점이 있지만, 웹사이트가 사용하는 안티봇 조치를 극복하려면 여전히 프록시 서비스가 필요합니다.
 
-Fortune 500 기업과 전 세계 20,000명 이상의 고객이 신뢰하는 프리미엄 プロキシ 서비스를 원하신다면, Bright Data와 그들의 광범위한 [proxy services](https://brightdata.co.kr/proxy-types)를 고려해 보십시오.
+Fortune 500 기업과 전 세계 20,000명 이상의 고객이 신뢰하는 프리미엄 프록시 서비스를 원하신다면, Bright Data와 그들의 광범위한 [proxy services](https://brightdata.co.kr/proxy-types)를 고려해 보십시오.
